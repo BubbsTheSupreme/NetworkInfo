@@ -249,7 +249,7 @@ if __name__ == "__main__":
 			storage = input("Server Storage: ")
 			video = input("Server Video: ")
 			network_card = input("Server Network Interface")
-			operating_system = input("")
+			operating_system = input("Server OS: ")
 			desc = input("Server Description: ")
 			network_info.insert_server_data(ip, name, memory, cpu, storage, video, network_card, os, desc)
 	if args.getserverip is not None:

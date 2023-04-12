@@ -1,5 +1,7 @@
-dbname = ""
+dbname = "networkinfo"
 user = ""
 password = ""
 host = ""
-port = ""
+port = "5432"
+
+logfile = "network_info.log"

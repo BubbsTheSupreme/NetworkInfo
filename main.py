@@ -57,7 +57,8 @@ class NetworkInfo:
 	def get_vm_by_id(self, id):
 		try:	
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE id = {id};")
+				query = "SELECT * FROM virtual_machines WHERE id = %s;"
+				cur.execute(query, (id,))
 				print(cur.fetchone())
 		except Exception as e:
 			logging.error(e)
@@ -65,7 +66,8 @@ class NetworkInfo:
 	def get_vm_by_ip(self, ip):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE ip = {ip};")
+				query = "SELECT * FROM virtual_machines WHERE ip = %s;"
+				cur.execute(query, (ip,))
 				print(cur.fetchone())
 		except Exception as e:
 			logging.error(e)
@@ -73,7 +75,8 @@ class NetworkInfo:
 	def get_vm_by_name(self, name):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE name = {name};")
+				query = "SELECT * FROM virtual_machines WHERE name = %s;"
+				cur.execute(query, (name,))
 				print(cur.fetchone())
 		except Exception as e:
 				logging.error(e)
@@ -81,7 +84,8 @@ class NetworkInfo:
 	def get_vms_by_os(self, os):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE os = {os};")
+				query = "SELECT * FROM virtual_machines WHERE os = %s;"
+				cur.execute(query, (os,))
 				for record in cur:
 					print(record)
 		except Exception as e:
@@ -98,7 +102,8 @@ class NetworkInfo:
 	def delete_vm_data(self, id):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"DELETE FROM virtual_machines WHERE id = {id};")
+				query = "DELETE FROM virtual_machines WHERE id = %s;"
+				cur.execute(query, (id,))
 		except Exception as e:
 			logging.error(e)
 
@@ -114,7 +119,8 @@ class NetworkInfo:
 	def get_server_by_id(self, id):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM servers WHERE id = {id};")
+				query = "SELECT * FROM servers WHERE id = %s;"
+				cur.execute(query, (id,))
 				print(cur.fetchone())
 		except Exception as e:
 			logging.error(e)
@@ -122,7 +128,8 @@ class NetworkInfo:
 	def get_server_by_ip(self, ip):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM servers WHERE ip = {ip};")
+				query = "SELECT * FROM servers WHERE ip = %s;"
+				cur.execute(query, (ip,))
 				print(cur.fetchone())
 		except Exception as e:
 			logging.error(e)			
@@ -130,15 +137,17 @@ class NetworkInfo:
 	def get_server_by_name(self, name):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM servers WHERE name = {name};")
-				return cur.fetchone()
+				query = "SELECT * FROM servers WHERE name = %s;"
+				cur.execute(query, (name,))
+				print(cur.fetchone())
 		except Exception as e:
 			logging.error(e)
 
 	def get_servers_by_os(self, os):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE os = {os};")
+				query = "SELECT * FROM virtual_machines WHERE os = %s;"
+				cur.execute(query, (os,))
 				for record in cur:
 					print(record)
 		except Exception as e:
@@ -147,7 +156,8 @@ class NetworkInfo:
 	def get_servers_by_memory(self, memory):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE memory = {memory};")
+				query = "SELECT * FROM virtual_machines WHERE memory = %s;"
+				cur.execute(query, (memory,))
 				for i in cur.fetchall():
 					print(i)
 		except Exception as e:
@@ -156,7 +166,8 @@ class NetworkInfo:
 	def get_servers_by_cpu(self, processor):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE processor = {processor};")
+				query = "SELECT * FROM virtual_machines WHERE processor = %s;"
+				cur.execute(query, (processor,))
 				for i in cur.fetchall():
 					print(i)
 		except Exception as e:
@@ -165,7 +176,8 @@ class NetworkInfo:
 	def get_servers_by_video(self, video):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"SELECT * FROM virtual_machines WHERE video = {video};")
+				query = "SELECT * FROM virtual_machines WHERE video = %s;"
+				cur.execute(query, (video,))
 				for record in cur:
 					print(record)
 		except Exception as e:
@@ -182,7 +194,8 @@ class NetworkInfo:
 	def delete_server_data(self, id):
 		try:
 			with self.conn.cursor() as cur:
-				cur.execute(f"DELETE FROM server WHERE id = {id};")
+				query = "DELETE FROM server WHERE id = %s;"
+				cur.execute(query, (id,))
 		except Exception as e:
 			logging.error(e)
 
@@ -194,24 +207,29 @@ if __name__ == "__main__":
 		description="Keeps track of information involving my servers and ESXi virtual machines",
 		prog="NetworkInfo"
 	)
-	parser.add_argument("-nvm", "--newvm", nargs="+", required=False, help="Inserts new VM data into database")
-	parser.add_argument("-dvm", "--delvm", required=False, help="Removes VM data from database")
-	parser.add_argument("-gvip", "--getvmip", required=False, help="Select VM by its IP")
-	parser.add_argument("-gvn", "--getvmname", required=False, help="Select VM by its Name")
-	parser.add_argument("-gvbo", "--getvmbyos", required=False, help="Select many VM's by their OS")
+	parser.add_argument("--newvm", required=False, help="Inserts new VM data into database, input is the number of entries you want to add.", type=int)
+	parser.add_argument("--delvm", required=False, help="Removes VM data from database")
+	parser.add_argument("--getvmip", required=False, help="Select VM by its IP")
+	parser.add_argument("--getvmname", required=False, help="Select VM by its Name")
+	parser.add_argument("--getvmbyos", required=False, help="Select many VM's by their OS")
 
-	parser.add_argument("-ns", "--newserver", nargs="+", required=False, help="Inserts new server data into database")
-	parser.add_argument("-gsip", "--getserverip", required=False, help="Select server by its IP")
-	parser.add_argument("-gsn", "--getservername", required=False, help="Select server by its Name")
-	parser.add_argument("-gsbo", "--getserverbyos", required=False, help="Select servers by their OS")
-	parser.add_argument("-gsbm", "--getserverbyram", required=False, help="Select servers by their Memory")
-	parser.add_argument("-gsbp", "--getserverbycpu", required=False, help="Select servers by their CPU")
-	parser.add_argument("-gsbv", "--getserverbyvideo", required=False, help="Select servers by their Video Interface")
-	parser.add_argument("-ds", "--delserver", required=False, help="Removes server data from database")
+	parser.add_argument("--newserver", required=False, help="Inserts new server data into database, input is the number of entries you want to add.", type=int)
+	parser.add_argument("--getserverip", required=False, help="Select server by its IP")
+	parser.add_argument("--getservername", required=False, help="Select server by its Name")
+	parser.add_argument("--getserverbyos", required=False, help="Select servers by their OS")
+	parser.add_argument("--getserverbyram", required=False, help="Select servers by their Memory")
+	parser.add_argument("--getserverbycpu", required=False, help="Select servers by their CPU")
+	parser.add_argument("--getserverbyvideo", required=False, help="Select servers by their Video Interface")
+	parser.add_argument("--delserver", required=False, help="Removes server data from database")
 	args = parser.parse_args()
 
 	if args.newvm is not None:
-		network_info.insert_vm_data(args.newvm)
+		for i in range(args.newvm):
+			ip = input("VM IP: ")
+			name = input("VM Name: ")
+			os = input("VM OS: ")
+			desc = input("VM Description: ")
+			network_info.insert_vm_data(ip, name, os, desc)
 	if args.getvmip is not None:
 		network_info.get_server_by_ip(args.getvmip)
 	if args.getvmname is not None:
@@ -222,7 +240,18 @@ if __name__ == "__main__":
 		network_info.delete_vm_data(args.delvm)
 
 	if args.newserver is not None:
-		network_info.insert_server_data(args.newserver)
+		for i in range(args.newserver):
+			ip = input("Server IP: ")
+			name = input("Server Name: ")
+			os = input("Server OS: ")
+			memory = input("Server Ram: ")
+			cpu = input("Server CPU: ")
+			storage = input("Server Storage: ")
+			video = input("Server Video: ")
+			network_card = input("Server Network Interface")
+			operating_system = input("")
+			desc = input("Server Description: ")
+			network_info.insert_server_data(ip, name, memory, cpu, storage, video, network_card, os, desc)
 	if args.getserverip is not None:
 		network_info.get_server_by_ip(args.getserverip)
 	if args.getservername is not None:

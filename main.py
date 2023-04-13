@@ -22,7 +22,7 @@ class NetworkInfo:
 			with self.conn.cursor() as cur:
 				cur.execute('''
 					CREATE TABLE IF NOT EXISTS "virtual_machines" (
-						id INTEGER PRIMARY KEY AUTOINCREMENT,
+						id INTEGER SERIAL PRIMARY KEY,
 						name TEXT,
 						ip TEXT,
 						operating_system TEXT,
@@ -30,7 +30,7 @@ class NetworkInfo:
 					);
 
 					CREATE TABLE IF NOT EXISTS "servers" (
-						id INTEGER PRIMARY KEY AUTOINCREMENT,
+						id INTEGER SERIAL PRIMARY KEY,
 						name TEXT,
 						ip TEXT,
 						memory TEXT,

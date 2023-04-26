@@ -9,12 +9,14 @@ if __name__ == "__main__":
 		description="Keeps track of information involving my servers and ESXi virtual machines",
 		prog="NetworkInfo"
 	)
+	parser.add_argument("--allvm", required=False, help="Returns all VM data", action="store_false")
 	parser.add_argument("--newvm", required=False, help="Inserts new VM data into database, input is the number of entries you want to add.", type=int)
 	parser.add_argument("--delvm", required=False, help="Removes VM data from database")
 	parser.add_argument("--getvmip", required=False, help="Select VM by its IP")
 	parser.add_argument("--getvmname", required=False, help="Select VM by its Name")
 	parser.add_argument("--getvmbyos", required=False, help="Select many VM's by their OS")
 
+	parser.add_argument("--allservers", required=False, help="Returns all server data", action="store_false")
 	parser.add_argument("--newserver", required=False, help="Inserts new server data into database, input is the number of entries you want to add.", type=int)
 	parser.add_argument("--getserverip", required=False, help="Select server by its IP")
 	parser.add_argument("--getservername", required=False, help="Select server by its Name")
@@ -25,6 +27,8 @@ if __name__ == "__main__":
 	parser.add_argument("--delserver", required=False, help="Removes server data from database")
 	args = parser.parse_args()
 
+	if args.allvm is not None:
+		net_info.read_all_vms()
 	if args.newvm is not None:
 		for i in range(args.newvm):
 			ip = input("VM IP: ")
@@ -40,7 +44,9 @@ if __name__ == "__main__":
 		net_info.get_vms_by_os(args.getvmbyos)
 	if args.delvm is not None:
 		net_info.delete_vm_data(args.delvm)
-
+	
+	if args.allservers is not None:
+		net_info.read_all_servers()
 	if args.newserver is not None:
 		for i in range(args.newserver):
 			ip = input("Server IP: ")

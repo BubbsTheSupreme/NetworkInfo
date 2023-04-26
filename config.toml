@@ -1,7 +1,9 @@
+# database data
 dbname = "networkinfo"
-user = ""
-password = ""
-host = ""
+user = "postgres"
+password = "_MM.ysyVy!X\\oi^E&.nb"
+host = "192.168.1.52"
 port = "5432"
 
+# path
 logfile = "network_info.log"
